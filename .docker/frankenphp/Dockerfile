@@ -1,6 +1,6 @@
 FROM dunglas/frankenphp:php8.2-alpine
 
-# Instalar extensões PHP necessárias
+# Install required PHP extensions
 RUN install-php-extensions \
     pdo \
     pdo_mysql \
@@ -10,7 +10,7 @@ RUN install-php-extensions \
     sockets \
     pcntl
 
-# Instalar Composer
+# Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 WORKDIR /app/public
