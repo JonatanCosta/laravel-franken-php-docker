@@ -48,7 +48,7 @@ This project sets up a Docker environment with:
 
 ### Ports
 
-- **8090**: HTTP (internal port 8089)
+- **8090**: HTTP (internal port 8090)
 - **8091**: HTTPS
 - **8091/UDP**: HTTP/3
 

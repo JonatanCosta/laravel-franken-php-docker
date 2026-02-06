@@ -20,7 +20,7 @@ services:
       - ms-network
     tty: true
     ports:
-      - "8090:8089"   # HTTP (internal port 8090) => The same port as the entrypoint.sh file configuration
+      - "8090:8090"   # HTTP (internal port 8090) => The same port as the entrypoint.sh file configuration
       - "8091:443"    # HTTPS
       - "8091:443/udp" # HTTP/3
     # depends_on:
