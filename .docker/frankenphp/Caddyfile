@@ -1,0 +1,22 @@
+:8089 {
+    root * /var/www/public
+    encode zstd gzip
+    
+    # Laravel
+    try_files {path} {path}/ /index.php?{query}
+    
+    php_server
+    
+    # Headers de segurança
+    header {
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "SAMEORIGIN"
+        X-XSS-Protection "1; mode=block"
+    }
+    
+    # Logs
+    log {
+        output stdout
+        format console
+    }
+}

@@ -1,0 +1,38 @@
+# Docker Compose to test FrankenPHP with Octane
+# Usage: docker-compose -f docker-compose.frankenphp.yml up
+
+services:
+  php-frankenphp:
+    build:
+      context: .
+      dockerfile: .docker/frankenphp/Dockerfile
+    container_name: "ms-checkout-php-frankenphp"
+    entrypoint: ["/bin/sh", "/app/public/.docker/frankenphp/entrypoint.sh"]
+    environment:
+      - COMPOSER_MEMORY_LIMIT=2G
+      - ENVIRONMENT=local
+    volumes:
+      - .:/app/public
+      - ./.docker/frankenphp/bin:/app/public/.docker/frankenphp/bin
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - ms-network
+    tty: true
+    ports:
+      - "8090:8089"   # HTTP (internal port 8090) => The same port as the entrypoint.sh file configuration
+      - "8091:443"    # HTTPS
+      - "8091:443/udp" # HTTP/3
+    # depends_on:
+    #   - mysql
+    #   - redis
+
+# If you need to use networks, uncomment the following block
+# networks:
+#   ms-network:
+#     driver: bridge
+
+# Volumes to store certificates and configuration for Caddy
+volumes:
+  caddy_data:
+  caddy_config:
