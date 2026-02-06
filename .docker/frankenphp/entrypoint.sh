@@ -4,7 +4,7 @@ set -e
 
 # Install Composer dependencies if needed
 if [ ! -d "vendor" ] || [ ! -f "vendor/autoload.php" ]; then
-    echo "📦 Instalando dependências do Composer..."
+    echo "📦 Installing Composer dependencies..."
     composer install --no-interaction --prefer-dist --optimize-autoloader
 fi
 
@@ -19,18 +19,18 @@ FRANKENPHP_SYSTEM="/usr/local/bin/frankenphp"
 
 # Check if system binary exists (comes with the image)
 if [ -f "$FRANKENPHP_SYSTEM" ]; then
-    echo "✅ Binário do sistema encontrado ($FRANKENPHP_SYSTEM)"
+    echo "✅ System binary found ($FRANKENPHP_SYSTEM)"
     
     # Test if the binary works (check version)
     if "$FRANKENPHP_SYSTEM" version > /dev/null 2>&1; then
-        echo "✅ Binário do sistema está funcional"
+        echo "✅ System binary is functional"
     else
-        echo "⚠️  Binário do sistema não respondeu, mas continuando..."
+        echo "⚠️  System binary did not respond, but continuing..."
     fi
     
     # If persistent doesn't exist, copy from system
     if [ ! -f "$FRANKENPHP_PERSISTENT" ]; then
-        echo "📦 Copiando binário do sistema para volume persistente..."
+        echo "📦 Copying system binary to persistent volume..."
         cp "$FRANKENPHP_SYSTEM" "$FRANKENPHP_PERSISTENT"
         chmod +x "$FRANKENPHP_PERSISTENT"
     fi
@@ -39,25 +39,25 @@ if [ -f "$FRANKENPHP_SYSTEM" ]; then
     rm -f "$FRANKENPHP_DOWNLOADED"
     ln -sf "$FRANKENPHP_SYSTEM" "$FRANKENPHP_DOWNLOADED"
     chmod +x "$FRANKENPHP_DOWNLOADED"
-    echo "✅ Symlink criado: $FRANKENPHP_DOWNLOADED -> $FRANKENPHP_SYSTEM"
+    echo "✅ Symlink created: $FRANKENPHP_DOWNLOADED -> $FRANKENPHP_SYSTEM"
 elif [ -f "$FRANKENPHP_PERSISTENT" ]; then
-    echo "✅ Usando binário persistente..."
+    echo "✅ Using persistent binary..."
     rm -f "$FRANKENPHP_DOWNLOADED"
     ln -sf "$FRANKENPHP_PERSISTENT" "$FRANKENPHP_DOWNLOADED"
     chmod +x "$FRANKENPHP_PERSISTENT"
-    echo "✅ Symlink criado: $FRANKENPHP_DOWNLOADED -> $FRANKENPHP_PERSISTENT"
+    echo "✅ Symlink created: $FRANKENPHP_DOWNLOADED -> $FRANKENPHP_PERSISTENT"
 else
-    echo "📦 Aguardando Octane baixar o binário..."
+    echo "📦 Waiting for Octane to download the binary..."
     # Monitor binary download and copy to persistent volume in background
     (
         sleep 5
         i=0
         while [ $i -lt 120 ]; do
             if [ -f "$FRANKENPHP_DOWNLOADED" ] && [ ! -f "$FRANKENPHP_PERSISTENT" ]; then
-                echo "📦 Binário baixado! Copiando para volume persistente..."
+                echo "📦 Binary downloaded! Copying to persistent volume..."
                 cp "$FRANKENPHP_DOWNLOADED" "$FRANKENPHP_PERSISTENT"
                 chmod +x "$FRANKENPHP_PERSISTENT"
-                echo "✅ Binário persistido"
+                echo "✅ Binary persisted"
                 break
             fi
             sleep 1
@@ -67,7 +67,7 @@ else
 fi
 
 # Clear OPcache before starting
-php -r "if (function_exists('opcache_reset')) { opcache_reset(); echo 'OPcache limpo\n'; }"
+php -r "if (function_exists('opcache_reset')) { opcache_reset(); echo 'OPcache cleared\n'; }"
 
 # Clear Laravel cache
 php artisan config:clear || true
